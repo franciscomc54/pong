@@ -74,7 +74,7 @@ let computer;
 localPlayer = playerA;
 computer = playerB;
 
-//Canvas Helpers -------------------------------------
+//Canvas Helpers ---------------------------------------------------------
 function drawRect(x, y, w, h, color) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, w, h);
@@ -94,7 +94,7 @@ function drawText(text, x, y, color=FONT_COLOR, fontSize=FONT_SIZE, fontFamily=F
     ctx.fillText(text, x, y);
 }
 
-//Pong Helpers
+//Pong Helpers -----------------------------------------------------------
 function clearCanvas() {
     drawRect(0, 0, cvs.width, cvs.height, BG_COLOR);
 }
@@ -119,9 +119,31 @@ function drawBall() {
     drawCircle(ball.x, ball.y, ball.radius, ball.color);
 }
 
-clearCanvas();
-drawNet();
-drawScore();
-drawPaddle(localPlayer);
-drawPaddle(computer);
-drawBall();
+//Play Helpers -----------------------------------------------------------
+function update() {
+    console.log('Actualizando...');
+}
+
+function render() {
+    clearCanvas();
+    drawNet();
+    drawScore();
+    drawPaddle(localPlayer);
+    drawPaddle(computer);
+    drawBall();
+}
+
+function gameLoop() {
+    update();
+    render();
+}
+
+function initGameLoop() {
+    setInterval(gameLoop, 1000/FRAME_PER_SECOND);
+}
+
+function play() {
+    initGameLoop();
+}
+
+play();
