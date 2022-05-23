@@ -6,12 +6,12 @@ const NUM_BALL = 5;
 
 const BG_COLOR = 'BLACK';
 
-const FONT_COLOR = 'WHITE';
+const FONT_COLOR = '#33FF51';
 const FONT_SIZE = '45px';
 const FONT_FAMILY = 'impact';
 
-const PADDLE_RIGHT_COLOR = 'GREEN';
-const PADDLE_LEFT_COLOR = 'GREEN';
+const PADDLE_RIGHT_COLOR = '#33FF51';
+const PADDLE_LEFT_COLOR = '#33FF51';
 const PADDLE_WIDTH = '20';
 const PADDLE_HEIGHT = '100';
 
@@ -20,7 +20,7 @@ const BALL_RADIUS = '10';
 const BALL_DELTA_VELOCITY = 0.5;
 const BALL_VELOCITY = 5;
 
-const NET_COLOR = 'WHITE';
+const NET_COLOR = '#33FF51';
 const NET_WIDTH = 4;
 const NET_HEIGHT = 10;
 const NET_PADDING = 15;
@@ -94,6 +94,34 @@ function drawText(text, x, y, color=FONT_COLOR, fontSize=FONT_SIZE, fontFamily=F
     ctx.fillText(text, x, y);
 }
 
-drawRect(0, 0, cvs.width, cvs.height, 'BLACK');
-drawCircle(100, 90, 10, 'WHITE');
-drawText('Saludos!!', 200, 200);
+//Pong Helpers
+function clearCanvas() {
+    drawRect(0, 0, cvs.width, cvs.height, BG_COLOR);
+}
+
+function drawNet() {
+    for(let i = 0; i <= cvs.height; i += net.padding) {
+        drawRect(net.x, net.y + i, net.width, net.height, net.color);
+    }
+}
+
+function drawScore() {
+    drawText(localPlayer.score, 1 * cvs.width / 4, cvs.height / 6);
+    drawText(computer.score, 3 * cvs.width / 4, cvs.height / 6);
+
+}
+
+function drawPaddle(paddle) {
+    drawRect(paddle.x, paddle.y, paddle.width, paddle.height, paddle.color);
+}
+
+function drawBall() {
+    drawCircle(ball.x, ball.y, ball.radius, ball.color);
+}
+
+clearCanvas();
+drawNet();
+drawScore();
+drawPaddle(localPlayer);
+drawPaddle(computer);
+drawBall();
