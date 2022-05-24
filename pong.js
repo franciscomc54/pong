@@ -12,11 +12,11 @@ const FONT_FAMILY = 'impact';
 
 const PADDLE_RIGHT_COLOR = '#33FF51';
 const PADDLE_LEFT_COLOR = '#33FF51';
-const PADDLE_WIDTH = '20';
-const PADDLE_HEIGHT = '100';
+const PADDLE_WIDTH = 20;
+const PADDLE_HEIGHT = 100;
 
 const BALL_COLOR = 'WHITE';
-const BALL_RADIUS = '10';
+const BALL_RADIUS = 10;
 const BALL_DELTA_VELOCITY = 0.5;
 const BALL_VELOCITY = 5;
 
@@ -120,8 +120,54 @@ function drawBall() {
 }
 
 //Play Helpers -----------------------------------------------------------
+function collision(b, p) {
+    b.top = b.y - b.radius;
+    b.bottom = b.y + b.radius;
+    b.left = b.x - b.radius;
+    b.right = b.x + b.radius;
+
+    p.top = p.y;
+    p.bottom = p.y + p.height;
+    p.left = p.x;
+    p.right = p.x + p.width;
+
+    return b.right > p.left && b.bottom > p.top && b.top < p.bottom && b.left < p.right;
+}
+
+function updateComputer() {
+    computer.y += (ball.y - (computer.y + computer.height / 2)) * COMPUTER_LEVEL;
+}
+
 function update() {
-    console.log('Actualizando...');
+    //Actualizamos la posición de la pelota
+    ball.x += ball.velocityX;
+    ball.y += ball.velocityY;
+    
+    //Actualizamos la posición de nuestra IA
+    updateComputer();
+
+    //Si la pelota ha golpeado en los laterales, rebotará...
+    if(ball.y + ball.radius > cvs.height || ball.y - ball.radius < 0) {
+        ball.velocityY = -ball.velocityY;
+    }
+
+    //Comprobamos si la pelota choca contra una pala
+    let whatPlayer = ball.x < cvs.width / 2 ? playerA : playerB;
+    if(collision(ball, whatPlayer)) {
+        //Calculamos el punto de colisión en la Y
+        let collidePoint = ball.y - (whatPlayer.y + whatPlayer.height / 2);
+        //Normalizamos el punto de colisión
+        collidePoint = collidePoint / (whatPlayer.height / 2);
+        //Calculamos el ángulo en radianes
+        const angleRad = collidePoint * Math.PI / 4;
+        //Calculamos la dirección x de la pelota
+        const direction = (ball.x < cvs.width / 2) ? 1 : -1;
+        //Modificamos la velocidad de la pelota
+        ball.velocityX = ball.speed * Math.cos(angleRad) * direction;
+        ball.velocityY = ball.speed * Math.sin(angleRad);
+        //Cada vez que colisionan incrementamos la velocidad
+        ball.speed += BALL_DELTA_VELOCITY;
+    }
 }
 
 function render() {
